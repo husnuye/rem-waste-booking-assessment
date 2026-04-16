@@ -1,25 +1,65 @@
-import { test, expect } from "@playwright/test";
+import { test } from "@playwright/test";
+import { BookingPage } from "../pages/bookingPage";
+import { testData } from "../utils/testData";
 
-test("general booking flow", async ({ page }) => {
-  await page.goto("/");
+/**
+ * General waste booking flow
+ *
+ * This test validates the standard happy-path journey:
+ * - successful postcode lookup
+ * - address selection
+ * - waste type selection
+ * - skip selection
+ * - review verification
+ * - booking confirmation
+ *
+ * The goal is to prove that the core booking journey works end-to-end.
+ */
+test.describe("Booking Flow - General Waste", () => {
+  test("should complete the general booking flow successfully", async ({ page }) => {
+    const bookingPage = new BookingPage(page);
 
-  await page.getByPlaceholder("Enter postcode").fill("SW1A 1AA");
-  await page.getByRole("button", { name: "Lookup" }).click();
+    await test.step("Open home page and verify landing state", async () => {
+      await bookingPage.openHomePage();
+      await bookingPage.expectHomePageLoaded();
+    });
 
-  await page.getByRole("button", { name: /10 Downing Street/i }).click();
-  await page.getByRole("button", { name: "General" }).click();
+    await test.step("Lookup postcode and verify deterministic address results", async () => {
+      await bookingPage.enterPostcodeAndLookup(testData.postcodes.happyPath);
+      await bookingPage.expectAddressVisible(testData.addresses.primary);
+    });
 
+    await test.step("Select address and verify transition to waste type step", async () => {
+      await bookingPage.selectAddress(testData.addresses.primary);
+      await bookingPage.expectWasteTypeStepLoaded();
+    });
 
+    await test.step("Select General waste and verify transition to skip step", async () => {
+      await bookingPage.selectWasteType("General");
+      await bookingPage.expectSkipStepLoaded();
+    });
 
-  await page.getByRole("button", { name: "4-yard - £120" }).click();
+    await test.step("Select a valid enabled skip option", async () => {
+      await bookingPage.expectSkipEnabled(testData.skips.general);
+      await bookingPage.selectSkip(testData.skips.general);
+    });
 
-  await expect(page.getByText("Review")).toBeVisible();
-  await expect(page.getByText(/Price breakdown/i)).toBeVisible();
+    await test.step("Verify review data and price breakdown are correct", async () => {
+      await bookingPage.expectReviewVisible();
+      await bookingPage.expectReviewPostcode(testData.postcodes.happyPath);
+      await bookingPage.expectReviewAddress("10 Downing Street");
+      await bookingPage.expectReviewWasteType("general");
+      await bookingPage.expectReviewSkip("4-yard");
+      await bookingPage.expectPriceBreakdown(
+        testData.pricing.general.base,
+        testData.pricing.general.vat,
+        testData.pricing.general.total
+      );
+    });
 
-  await page.getByRole("button", { name: /Confirm Booking/i }).click();
-
-  await expect(
-    page.getByText(/Booking confirmed successfully/i)
-  ).toBeVisible();
-  await expect(page.getByText(/ID:/i)).toBeVisible();
+    await test.step("Confirm booking and verify success state", async () => {
+      await bookingPage.confirmBooking();
+      await bookingPage.expectBookingSuccess();
+    });
+  });
 });
