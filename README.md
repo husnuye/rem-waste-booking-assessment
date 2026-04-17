@@ -531,7 +531,7 @@ Located in:
 
 Run locally:
 
-```bash
+
 cd automation
 npm install
 npx playwright install
@@ -614,7 +614,7 @@ This structure reflects real-world QA engineering practices, where tests must re
 
 Run the full application:
 
-```bash
+
 docker compose up --build
 
 Open:
