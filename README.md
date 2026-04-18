@@ -378,6 +378,7 @@ Response:
   ]
 }
 
+```
 
 6.4 Booking Confirmation
 
