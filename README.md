@@ -582,11 +582,12 @@ All screenshots and media files are referenced directly within the documentation
 
 ### Overview
 
-End-to-end automation is implemented using Playwright to validate critical user journeys.
+End-to-end automation is implemented using Playwright to validate critical user journeys, ensuring functional correctness and system reliability.
 
 ---
 
 ### Covered Flows
+
 
 - General waste booking flow  
 - Heavy waste booking flow  
