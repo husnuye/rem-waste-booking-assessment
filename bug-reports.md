@@ -392,67 +392,69 @@ Note: Improved success feedback demonstrates a clearer and more persistent confi
 Fixed  
 
 
-## BUG-07 — Multiple bookings can be created from a single review state
+### BUG-07 — Duplicate booking submission from review step
 
-**Type:** Functional / State  
 **Severity:** High  
 **Priority:** High  
+**Environment:** Local (Docker) — Chrome  
 
 ---
 
 ### Description
-User is able to submit the same booking multiple times without changing any data. Each submission generates a new booking ID, resulting in duplicate bookings.
 
-This indicates that the system does not properly control submission state or prevent repeated actions.
+Users were able to trigger multiple booking submissions from the review step by clicking the **Confirm Booking** button multiple times.
+
+This resulted in multiple booking IDs being generated for a single booking flow.
 
 ---
 
 ### Steps to Reproduce
-1. Complete the booking flow  
-2. Click `Confirm Booking`  
-3. Wait for success message  
-4. Click `Confirm Booking` again  
+
+1. Complete the booking flow until the review step  
+2. Click **Confirm Booking**  
+3. Immediately click **Confirm Booking** again  
 
 ---
 
 ### Expected Result
-- Booking should only be created once  
-- Confirm button should be disabled after submission  
-- Duplicate submissions should be prevented  
+
+- Only one booking should be created  
+- Confirm action should be disabled after submission  
+- No additional booking IDs should be generated  
 
 ---
 
-### Actual Result
-- Multiple bookings are created  
-- Each click generates a new booking ID  
-- No restriction on repeated submission  
+### Actual Result (Before Fix)
+
+- Multiple booking requests were sent  
+- Multiple booking IDs were generated  
+- Confirm action remained active  
 
 ---
 
 ### Evidence
+
 [▶ Watch duplicate booking video](../media/duplicate-booking.mp4)
 
-![First booking](../media/duplicate-1.png)
-
+![First booking](../media/duplicate-1.png)  
 ![Second booking](../media/duplicate-2.png)
 
-Note: The same booking configuration can be submitted multiple times, generating different booking IDs on each submission.
+**Note:** These screenshots and video show the behavior **before the fix was applied**.
 
-Note: This demonstrates missing submission control and lack of idempotency in the booking process.
----
+At that time, the same booking configuration could be submitted multiple times, generating different booking IDs on each submission.
 
-### Root Cause
-Confirm button remains active after submission and there is no idempotency or duplicate request protection implemented.
+This demonstrated missing submission control and lack of idempotency in the booking process. The issue has now been resolved.
 
 ---
 
-### Fix Suggestion
-- Disable the Confirm button after the first submission  
-- Prevent repeated API calls from the UI  
-- Implement idempotency checks on the backend  
+### Fix Applied
+
+- Confirm action is now disabled after successful submission  
+- Repeated submissions are blocked on the client side  
+- Button state changes to **Booked** after success  
 
 ---
 
 ### Status
-Open (identified but not fixed as part of the assessment scope)
 
+Fixed

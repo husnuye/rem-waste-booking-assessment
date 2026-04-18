@@ -198,7 +198,7 @@ export default function App() {
   }
 
   async function handleConfirmBooking() {
-    if (!selectedSkip || confirming) return;
+    if (!selectedSkip || confirming || bookingSuccess) return;
 
     try {
       setConfirming(true);
@@ -654,7 +654,7 @@ export default function App() {
 
               <button
                 onClick={handleConfirmBooking}
-                disabled={confirming}
+                disabled={confirming || bookingSuccess}
                 style={{
                   background: "#1976d2",
                   color: "#fff",
@@ -665,7 +665,11 @@ export default function App() {
                   opacity: confirming ? 0.6 : 1,
                 }}
               >
-                {confirming ? "Confirming..." : "Confirm Booking"}
+                {confirming
+                  ? "Confirming..."
+                  : bookingSuccess
+                    ? "Booked"
+                    : "Confirm Booking"}
               </button>
             </div>
           )}

@@ -503,7 +503,7 @@ Key findings include:
 Two critical issues were identified:
 
 - **BUG-03** — validation and API errors handled in the same state  
-- **BUG-07** — duplicate bookings allowed from a single review state  
+- **BUG-07** — duplicate booking submissions were possible from a single review state (now fixed)
 
 These issues directly impact:
 
@@ -515,6 +515,49 @@ All bugs are documented in:
 
 `bug-reports.md`
 
+
+### Bug Reporting
+
+A total of **7 bugs** were identified during testing of the booking flow.
+
+Each bug includes:
+
+- severity  
+- priority  
+- environment  
+- reproduction steps  
+- expected vs actual behavior  
+- evidence (screenshots and video)  
+- fix description (where applicable)  
+
+Key findings include:
+
+- validation issues (invalid postcode handling)  
+- duplicate retry behavior  
+- state/branching issue (validation vs API errors)  
+- UI feedback issues (error/success visibility and selection highlight)  
+- missing price visibility  
+- missing persistent booking confirmation  
+- duplicate booking submissions (BUG-07)  
+
+Two critical issues were identified:
+
+- **BUG-03** — validation and API errors handled in the same state  
+- **BUG-07** — duplicate booking submissions were possible from a single review state (now fixed)
+
+These issues directly impact:
+
+- user flow correctness  
+- system reliability  
+- data integrity  
+
+All bugs are documented in:
+
+`bug-reports.md`
+
+All identified issues have been analysed, and fixes have been applied where applicable, with supporting evidence included.
+
+---
 
 ---
 
@@ -561,9 +604,10 @@ Supporting evidence for testing, UI validation, and bug analysis is included in 
 
 - API contract and request/response structure → `docs/api-contract.md`  
 - UI / UX evidence → `docs/ui-evidence.md`  
-- Bug reports with screenshots and video → `docs/bug-reports.md`  
-- Manual test coverage → `docs/manual-tests.md`  
+- Bug reports with screenshots and video → `bug-reports.md` (root) / `docs/bug-reports.md`  
+- Manual test coverage → `manual-tests.md` (root) / `docs/manual-tests.md`  
 - Media assets → `media/`  
+
 
 The `media/` folder contains:
 
@@ -840,10 +884,15 @@ This ensures:
 ## Submission Checklist
 
 This repository includes all required assessment components:
+## Submission Checklist
+
+This repository includes all required assessment components:
 
 - README.md  
-- docs/manual-tests.md  
-- docs/bug-reports.md  
+- manual-tests.md (root)  
+- bug-reports.md (root)  
+- docs/manual-tests.md (detailed version)  
+- docs/bug-reports.md (detailed version)  
 - docs/ui-evidence.md  
 - docs/api-contract.md  
 - apps/ui/ (frontend application)  
@@ -852,8 +901,7 @@ This repository includes all required assessment components:
 - media/ (screenshots and video evidence)  
 - full source code  
 - Docker setup (docker-compose)  
-- CI workflow (GitHub Actions)  
----
+- CI workflow (GitHub Actions)
 
 ## Final Summary
 
@@ -877,7 +925,7 @@ All bugs are documented with **clear reproduction steps and visual evidence**, i
 
 The project is supported by:
 
-- structured documentation (manual tests, bug reports, UI evidence, API contract)  
+- structured documentation ( UI evidence, API contract)  
 - a stable automation framework using Playwright  
 - Docker-based setup for easy execution  
 - CI pipeline for continuous validation  
